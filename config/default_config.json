@@ -1,0 +1,62 @@
+{
+  "project_name": "MyGame",
+  "version": "0.1.0",
+  "api": {
+    "openai_api_key": "",
+    "anthropic_api_key": "",
+    "llm_provider": "openai",
+    "llm_model": "gpt-4",
+    "recraft_api_key": "",
+    "meshy_api_key": "",
+    "elevenlabs_api_key": "",
+    "steam_api_key": ""
+  },
+  "paths": {
+    "output_base": "./output",
+    "templates_dir": "./autogs/templates",
+    "unity_editor_path": "",
+    "project_path": null
+  },
+  "trend_scout": {
+    "sources": ["steam", "itch", "tiktok"],
+    "max_results": 100,
+    "sentiment_threshold": 0.6,
+    "velocity_threshold": 2.0,
+    "lookback_days": 30
+  },
+  "gdd_architect": {
+    "detail_level": "comprehensive",
+    "include_monetization": true,
+    "include_analytics": true,
+    "max_mechanics": 10,
+    "max_quests": 20
+  },
+  "asset_factory": {
+    "default_2d_size": [512, 512],
+    "default_3d_poly": "low",
+    "max_concurrent_generations": 5,
+    "retry_failed": true,
+    "max_retries": 3,
+    "output_format_3d": "fbx",
+    "output_format_2d": "png",
+    "output_format_audio": "wav"
+  },
+  "engineer": {
+    "unity_version": "2022.3.0f1",
+    "render_pipeline": "URP",
+    "code_style": "standard",
+    "include_comments": true,
+    "include_tests": false,
+    "namespace_prefix": "Game"
+  },
+  "build": {
+    "target_platforms": ["windows_64", "android"],
+    "development_build": false,
+    "compression": "lz4",
+    "auto_increment_version": true
+  },
+  "run_stages": [1, 2, 3, 4, 5],
+  "save_intermediate": true,
+  "verbose": true,
+  "dry_run": false
+}
