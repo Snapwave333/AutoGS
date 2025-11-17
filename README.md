@@ -1,290 +1,559 @@
-# AutoGS - Automated Game Studio
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=180&section=header&text=AutoGS&fontSize=80&fontColor=fff&animation=twinkling&fontAlignY=35&desc=Automated%20Game%20Studio&descSize=20&descAlignY=55" alt="AutoGS Header"/>
+</p>
 
-A bot-driven pipeline for Unity game development that automates 90% of the development labor. Your role shifts from "artist" or "coder" to "Executive Producer" who directs a team of specialized AI bots.
+<p align="center">
+  <em>🎮 Transform from Solo Developer to Executive Producer with AI-Powered Game Development</em>
+</p>
 
-## Overview
+<p align="center">
+  <a href="#-quick-start"><img src="https://img.shields.io/badge/Quick_Start-2ea44f?style=for-the-badge&logo=rocket&logoColor=white" alt="Quick Start"/></a>
+  <a href="#-the-pipeline"><img src="https://img.shields.io/badge/View_Pipeline-blue?style=for-the-badge&logo=workflow&logoColor=white" alt="Pipeline"/></a>
+  <a href="#-installation"><img src="https://img.shields.io/badge/Installation-orange?style=for-the-badge&logo=python&logoColor=white" alt="Installation"/></a>
+</p>
 
-AutoGS implements a 5-stage pipeline that transforms market insights into deployable Unity games:
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python"/>
+  <img src="https://img.shields.io/badge/Unity-2022.3_LTS-000000?style=flat-square&logo=unity&logoColor=white" alt="Unity"/>
+  <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License"/>
+  <img src="https://img.shields.io/badge/Status-Alpha-yellow?style=flat-square" alt="Status"/>
+  <img src="https://img.shields.io/badge/PRs-Welcome-brightgreen?style=flat-square" alt="PRs Welcome"/>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/github/stars/Snapwave333/AutoGS?style=social" alt="Stars"/>
+  <img src="https://img.shields.io/github/forks/Snapwave333/AutoGS?style=social" alt="Forks"/>
+  <img src="https://img.shields.io/github/watchers/Snapwave333/AutoGS?style=social" alt="Watchers"/>
+</p>
+
+---
+
+<h2 align="center">🚀 90% Automation • 100% Your Vision</h2>
+
+<p align="center">
+  <strong>AutoGS</strong> is a revolutionary bot-driven pipeline that transforms game development.<br/>
+  <em>You become the Director. AI bots become your 50-person studio.</em>
+</p>
+
+<br/>
+
+## ✨ Why AutoGS?
+
+<table>
+<tr>
+<td width="50%">
+
+### 🎯 The Problem
+- Solo game development is overwhelming
+- Assets take months to create
+- Code architecture is complex
+- Market research is time-consuming
+- Building for multiple platforms is tedious
+
+</td>
+<td width="50%">
+
+### 💡 The Solution
+- **5 specialized AI bots** handle the labor
+- **Automated asset generation** with AI APIs
+- **Code templates** for common systems
+- **Data-driven** niche discovery
+- **One-click** multi-platform builds
+
+</td>
+</tr>
+</table>
+
+<br/>
+
+## 🔄 The Pipeline
+
+<p align="center">
+  <img src="https://img.shields.io/badge/1-Market_Research-FF6B6B?style=for-the-badge" alt="Stage 1"/>
+  <img src="https://img.shields.io/badge/→-gray?style=for-the-badge" alt="arrow"/>
+  <img src="https://img.shields.io/badge/2-Game_Design-4ECDC4?style=for-the-badge" alt="Stage 2"/>
+  <img src="https://img.shields.io/badge/→-gray?style=for-the-badge" alt="arrow"/>
+  <img src="https://img.shields.io/badge/3-Asset_Factory-45B7D1?style=for-the-badge" alt="Stage 3"/>
+  <img src="https://img.shields.io/badge/→-gray?style=for-the-badge" alt="arrow"/>
+  <img src="https://img.shields.io/badge/4-Code_Gen-96CEB4?style=for-the-badge" alt="Stage 4"/>
+  <img src="https://img.shields.io/badge/→-gray?style=for-the-badge" alt="arrow"/>
+  <img src="https://img.shields.io/badge/5-Build_&_Deploy-FFEAA7?style=for-the-badge" alt="Stage 5"/>
+</p>
 
 ```
-Market Research → Game Design → Asset Generation → Code Generation → Build & Deploy
+┌─────────────────────────────────────────────────────────────────────┐
+│                         AUTOGS PIPELINE                            │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  📊 TREND SCOUT          📝 GDD ARCHITECT         🎨 ASSET FACTORY │
+│  ┌─────────────┐         ┌─────────────┐         ┌─────────────┐  │
+│  │ Steam API   │         │ Core Loop   │         │ Recraft 2D  │  │
+│  │ itch.io     │    ▶    │ Mechanics   │    ▶    │ Meshy 3D    │  │
+│  │ TikTok      │         │ Story/Quest │         │ ElevenLabs  │  │
+│  │ Sentiment   │         │ Asset List  │         │ Uizard UI   │  │
+│  └─────────────┘         └─────────────┘         └─────────────┘  │
+│         │                        │                        │        │
+│         ▼                        ▼                        ▼        │
+│    Game Brief              50+ Page GDD            All Assets      │
+│                                                                     │
+│  💻 ENGINEER BOT           🚀 BUILD & DEPLOY                       │
+│  ┌─────────────┐          ┌─────────────┐                         │
+│  │ C# Scripts  │          │ Windows .exe│                         │
+│  │ Unity Setup │     ▶    │ Android .apk│                         │
+│  │ Scenes      │          │ macOS .app  │                         │
+│  │ Prefabs     │          │ WebGL       │                         │
+│  └─────────────┘          └─────────────┘                         │
+│         │                         │                                │
+│         ▼                         ▼                                │
+│   Complete Project          Ready to Ship! 🎉                      │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
-**Important Note:** As of 2025, a single bot cannot autonomously create fun, cohesive games. The "fun" part—core game loop, system architecture, and cohesion—still requires a human "Director." AutoGS automates the manual labor while you make the creative decisions.
+<br/>
 
-## The Five Stages
+## 🤖 Meet Your AI Team
 
-### Stage 1: Trend Scout Bot (Market Research)
-**Goal:** Find a profitable, low-competition niche.
+<table>
+<tr>
+<td align="center" width="20%">
+<img src="https://img.shields.io/badge/🔍-Trend_Scout-FF6B6B?style=for-the-badge" alt="Trend Scout"/>
+<br/><br/>
+<strong>Market Analyst</strong>
+<br/>
+Scrapes Steam, itch.io, TikTok<br/>
+Sentiment analysis<br/>
+Keyword velocity tracking<br/>
+Niche identification
+</td>
+<td align="center" width="20%">
+<img src="https://img.shields.io/badge/📋-GDD_Architect-4ECDC4?style=for-the-badge" alt="GDD Architect"/>
+<br/><br/>
+<strong>Game Designer</strong>
+<br/>
+Core game loops<br/>
+Mechanic systems<br/>
+Story & quests<br/>
+Asset manifests
+</td>
+<td align="center" width="20%">
+<img src="https://img.shields.io/badge/🎨-Asset_Factory-45B7D1?style=for-the-badge" alt="Asset Factory"/>
+<br/><br/>
+<strong>Art Director</strong>
+<br/>
+2D sprites & textures<br/>
+3D models<br/>
+Sound effects<br/>
+Music & UI
+</td>
+<td align="center" width="20%">
+<img src="https://img.shields.io/badge/💻-Engineer-96CEB4?style=for-the-badge" alt="Engineer"/>
+<br/><br/>
+<strong>Lead Developer</strong>
+<br/>
+C# script generation<br/>
+Unity project setup<br/>
+Scene configuration<br/>
+System architecture
+</td>
+<td align="center" width="20%">
+<img src="https://img.shields.io/badge/🚀-Build_Bot-FFEAA7?style=for-the-badge" alt="Build Bot"/>
+<br/><br/>
+<strong>DevOps</strong>
+<br/>
+Multi-platform builds<br/>
+Automated compilation<br/>
+Package distribution<br/>
+Release management
+</td>
+</tr>
+</table>
 
-- Scrapes data from Steam, itch.io, and TikTok
-- Analyzes sentiment and keyword velocity
-- Identifies high-demand, low-supply combinations
-- **Output:** Game Brief with market-validated concept
+<br/>
 
+## ⚡ Quick Start
+
+<table>
+<tr>
+<td>
+
+### 1️⃣ Install
+
+```bash
+git clone https://github.com/Snapwave333/AutoGS.git
+cd AutoGS
+pip install -e .
 ```
-Example Output:
-"High-demand, low-supply niche detected: '1-4 player co-op sci-fi survival
-game with base-building'. Avoid 'zombies' (saturated); target 'alien planets'
-(high-demand)."
+
+</td>
+<td>
+
+### 2️⃣ Initialize
+
+```bash
+python -m autogs init MyGame
 ```
 
-### Stage 2: GDD Architect Bot (Pre-Production)
-**Goal:** Transform the Game Brief into a complete Game Design Document.
+</td>
+<td>
 
-- Generates core game loop and mechanics
-- Designs story structure (3 acts) and quests
-- Creates character profiles and narrative arcs
-- Compiles complete asset requirements list
-- **Output:** 50+ page comprehensive GDD
+### 3️⃣ Run Pipeline
 
-### Stage 3: Asset Factory Bot (Production)
-**Goal:** Programmatically create every asset in the GDD.
+```bash
+python -m autogs run --dry-run
+```
 
-Calls specialized AI APIs:
-- **2D Art:** Recraft, Midjourney, DALL-E for textures, sprites, UI
-- **3D Models:** Meshy for text-to-3D and image-to-3D generation
-- **Audio:** ElevenLabs for SFX, Mubert for music
-- **UI/UX:** Uizard for interface design
-- **Output:** Complete asset library organized for Unity import
+</td>
+</tr>
+</table>
 
-### Stage 4: Engineer Bot (Code Generation)
-**Goal:** Write C# scripts and assemble the Unity project.
+<details>
+<summary><strong>📖 Full Installation Guide</strong></summary>
 
-- Generates scripts for each mechanic in the GDD
-- Creates Unity project structure
-- Sets up scenes, configurations, and packages
-- **Output:** Complete Unity project with all scripts
+### Prerequisites
 
-**Note:** AI writes the components; you integrate them. The AI cannot architect the full game's systems—it can only write components on command.
+- Python 3.10 or higher
+- Git
+- Unity 2022.3 LTS (for code generation stage)
 
-### Stage 5: Build & Deploy Bot (Distribution)
-**Goal:** Compile final executables for all platforms.
-
-- Executes Unity batch mode builds
-- Packages for Windows, Mac, Linux, Android, iOS, WebGL
-- Generates build scripts for manual use
-- **Output:** Deployment-ready .exe, .apk, etc.
-
-## Installation
+### Step-by-Step
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/AutoGS.git
+git clone https://github.com/Snapwave333/AutoGS.git
 cd AutoGS
+
+# Create virtual environment (recommended)
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
 
-# Or install as a package
+# Install as package
 pip install -e .
+
+# Verify installation
+python -m autogs info
 ```
 
-## Quick Start
+### Configure API Keys
 
-### 1. Initialize a Project
-
-```bash
-python -m autogs init MyAwesomeGame
-```
-
-This creates:
-- Project directory structure
-- Default configuration file
-- Output folders for each stage
-
-### 2. Configure API Keys
-
-Edit the generated `config.json`:
+Edit your project's `config.json`:
 
 ```json
 {
   "api": {
-    "openai_api_key": "your-key-here",
-    "meshy_api_key": "your-key-here",
-    "recraft_api_key": "your-key-here"
+    "openai_api_key": "sk-...",
+    "anthropic_api_key": "sk-ant-...",
+    "meshy_api_key": "your-meshy-key",
+    "recraft_api_key": "your-recraft-key",
+    "elevenlabs_api_key": "your-elevenlabs-key"
   }
 }
 ```
 
-### 3. Run the Pipeline
+</details>
+
+<br/>
+
+## 🛠️ CLI Commands
 
 ```bash
-# Full pipeline
-python -m autogs run --config ./output/MyAwesomeGame/config.json
+# 📦 Project Management
+python -m autogs init [name]        # Create new project
+python -m autogs status             # Check pipeline status
+python -m autogs info               # Show system information
 
-# Dry run (simulation)
-python -m autogs run --dry-run
+# 🚀 Pipeline Execution
+python -m autogs run                # Run full pipeline
+python -m autogs run --dry-run      # Simulate without execution
+python -m autogs run --stages 1 2   # Run specific stages
+python -m autogs stage 3            # Run single stage
 
-# Specific stages only
-python -m autogs run --stages 1 2
-
-# Single stage
-python -m autogs stage 2
+# ⚙️ Configuration
+python -m autogs config --show      # Display current config
+python -m autogs config --create    # Generate default config
+python -m autogs config --validate  # Validate configuration
 ```
 
-### 4. Review Results
+<br/>
 
-Each stage saves its output to the project directory:
-- Stage 1: `TrendScoutBot/` - Market analysis and Game Brief
-- Stage 2: `GDDArchitectBot/` - Complete GDD in Markdown
-- Stage 3: `AssetFactoryBot/` - Generated assets organized by type
-- Stage 4: `EngineerBot/` - Unity project with C# scripts
-- Stage 5: `BuildDeployBot/` - Build artifacts and scripts
+## 📊 What Gets Generated
 
-## Programmatic Usage
+<table>
+<tr>
+<th>Stage</th>
+<th>Output</th>
+<th>Format</th>
+</tr>
+<tr>
+<td><strong>1. Trend Scout</strong></td>
+<td>Game Brief with market validation</td>
+<td>JSON + Report</td>
+</tr>
+<tr>
+<td><strong>2. GDD Architect</strong></td>
+<td>50+ page Game Design Document</td>
+<td>Markdown + JSON</td>
+</tr>
+<tr>
+<td><strong>3. Asset Factory</strong></td>
+<td>Complete asset library</td>
+<td>PNG, FBX, WAV, etc.</td>
+</tr>
+<tr>
+<td><strong>4. Engineer</strong></td>
+<td>Unity project with C# scripts</td>
+<td>.cs, .unity, .json</td>
+</tr>
+<tr>
+<td><strong>5. Build & Deploy</strong></td>
+<td>Compiled game executables</td>
+<td>.exe, .apk, .app</td>
+</tr>
+</table>
 
-```python
-from autogs import GamePipeline, PipelineConfig
+<br/>
 
-# Create configuration
-config = PipelineConfig()
-config.project_name = "SpaceColony"
-config.dry_run = True
+## 🎯 Example Output
 
-# Initialize pipeline
-pipeline = GamePipeline(config)
-
-# Run full pipeline
-results = pipeline.run()
-
-# Or run individual stages
-brief = pipeline.run_single_stage(1)  # Market research
-gdd = pipeline.run_single_stage(2, brief)  # Generate GDD
-assets = pipeline.run_single_stage(3, gdd)  # Create assets
-```
-
-See `examples/` for more detailed usage patterns.
-
-## CLI Commands
-
-```bash
-# Initialize new project
-python -m autogs init [project_name]
-
-# Run pipeline
-python -m autogs run [--config PATH] [--stages N...] [--dry-run]
-
-# Run single stage
-python -m autogs stage N [--input FILE]
-
-# Manage configuration
-python -m autogs config --show
-python -m autogs config --create
-python -m autogs config --validate
-
-# Check status
-python -m autogs status
-
-# Show information
-python -m autogs info
-```
-
-## Project Structure
+<details>
+<summary><strong>📝 Sample Game Brief (Stage 1)</strong></summary>
 
 ```
-AutoGS/
-├── autogs/                 # Main package
-│   ├── bots/              # Bot implementations
-│   │   ├── trend_scout.py      # Stage 1
-│   │   ├── gdd_architect.py    # Stage 2
-│   │   ├── asset_factory.py    # Stage 3
-│   │   ├── engineer.py         # Stage 4
-│   │   └── build_deploy.py     # Stage 5
-│   ├── core/              # Core infrastructure
-│   │   ├── pipeline.py         # Main orchestrator
-│   │   ├── config.py           # Configuration management
-│   │   └── base_bot.py         # Base bot class
-│   ├── models/            # Data models
-│   │   ├── game_brief.py       # Stage 1 output
-│   │   ├── gdd.py              # Stage 2 output
-│   │   ├── assets.py           # Stage 3 output
-│   │   ├── code.py             # Stage 4 output
-│   │   └── build.py            # Stage 5 output
-│   └── templates/         # LLM prompt templates
-├── config/                # Configuration files
-├── examples/              # Example usage scripts
-├── scripts/               # Build and utility scripts
-└── output/                # Generated project output
+=== GAME BRIEF ===
+Title: Void Station Protocol
+Concept: A 1-4 player co-op sci-fi survival game with base-building and automation
+Genre: survival (sci-fi, co-op, base-building)
+Players: 1-4 players
+Theme: sci-fi
+Setting: Abandoned space station on the edge of known space
+
+Target Keywords: co-op, sci-fi, survival, base-building, automation
+Avoid Keywords: zombies, pixel-art, battle-royale
+
+Confidence Score: 87.3%
+==================
 ```
 
-## Configuration
+</details>
 
-The pipeline is highly configurable. Key settings:
+<details>
+<summary><strong>📋 Sample GDD Mechanics (Stage 2)</strong></summary>
 
-```json
-{
-  "project_name": "MyGame",
-  "run_stages": [1, 2, 3, 4, 5],  // Which stages to run
-  "dry_run": false,                // Simulate without executing
-  "verbose": true,                 // Detailed logging
+```markdown
+## Base Construction (Priority: CRITICAL)
+Players can construct and upgrade modular base components
 
-  "trend_scout": {
-    "sources": ["steam", "itch", "tiktok"],
-    "sentiment_threshold": 0.6,
-    "velocity_threshold": 2.0
-  },
+**Core Systems:**
+- GridSystem
+- ResourceManager
+- BuildingPlacement
 
-  "gdd_architect": {
-    "detail_level": "comprehensive",
-    "max_mechanics": 10,
-    "max_quests": 20
-  },
-
-  "engineer": {
-    "unity_version": "2022.3.0f1",
-    "render_pipeline": "URP"
-  },
-
-  "build": {
-    "target_platforms": ["windows_64", "android"]
-  }
-}
-```
-
-## Your Role as Director
-
-While the bots handle the manual labor, you are responsible for:
-
-1. **Creative Vision** - Defining what makes your game unique
-2. **Quality Control** - Reviewing and refining bot outputs
-3. **Integration** - Connecting systems and ensuring cohesion
-4. **Playtesting** - Validating that the game is actually fun
-5. **Polish** - Adding the human touch that makes games special
-
-## Current Limitations
-
-- **No True Autonomy:** Bots execute predefined tasks, not creative decisions
-- **API Dependencies:** Asset generation requires external AI service subscriptions
-- **Integration Required:** Generated code needs human assembly and debugging
-- **Fun Factor:** AI cannot guarantee the game will be enjoyable to play
-- **Context Limits:** LLM context windows limit scope of generation
-
-## Future Roadmap
-
-- [ ] Real-time API integration with Steam, itch.io, TikTok
-- [ ] LLM-powered mechanic generation with actual AI calls
-- [ ] Async asset generation with progress tracking
-- [ ] Unity Editor integration plugin
-- [ ] Automated testing and quality metrics
-- [ ] Steam/Play Store deployment automation
-
-## License
-
-MIT License
-
-## Contributing
-
-Contributions are welcome! Areas particularly in need:
-- Real API integrations for data sources
-- Enhanced code generation templates
-- Unity Editor tooling
-- Additional asset generation providers
-
-## Acknowledgments
-
-This project was inspired by the potential of AI-assisted game development and the vision of democratizing game creation. While we're not yet at "push button, receive game," we're building the tools that will get us there.
+**Player Interactions:**
+- Place, Rotate, Upgrade, Demolish
 
 ---
 
-**Remember:** The goal isn't to replace human creativity—it's to amplify it. You're not just a user of AutoGS; you're the Director of your own AI-powered game studio.
+## Multiplayer Co-op (Priority: HIGH)
+Seamless drop-in/drop-out cooperative gameplay for up to 4 players
+
+**Core Systems:**
+- NetworkManager
+- PlayerSync
+- SessionManager
+```
+
+</details>
+
+<details>
+<summary><strong>💻 Sample Generated Code (Stage 4)</strong></summary>
+
+```csharp
+using UnityEngine;
+
+namespace VoidStationProtocol.Core
+{
+    public class GameManager : MonoBehaviour
+    {
+        public static GameManager Instance { get; private set; }
+
+        public enum GameState { MainMenu, Playing, Paused, GameOver }
+        public GameState CurrentState { get; private set; }
+
+        private void Awake()
+        {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+
+        public void StartGame()
+        {
+            CurrentState = GameState.Playing;
+            Time.timeScale = 1f;
+        }
+        // ... more methods
+    }
+}
+```
+
+</details>
+
+<br/>
+
+## 🏗️ Architecture
+
+```
+AutoGS/
+├── 🎯 autogs/                    # Main package
+│   ├── 🤖 bots/                  # 5 specialized AI bots
+│   │   ├── trend_scout.py        # Market research
+│   │   ├── gdd_architect.py      # Game design
+│   │   ├── asset_factory.py      # Asset generation
+│   │   ├── engineer.py           # Code generation
+│   │   └── build_deploy.py       # Build automation
+│   ├── ⚙️ core/                  # Infrastructure
+│   │   ├── pipeline.py           # Orchestrator
+│   │   ├── config.py             # Configuration
+│   │   └── base_bot.py           # Base class
+│   ├── 📦 models/                # Data structures
+│   │   ├── game_brief.py         # Stage 1 output
+│   │   ├── gdd.py                # Stage 2 output
+│   │   ├── assets.py             # Stage 3 output
+│   │   ├── code.py               # Stage 4 output
+│   │   └── build.py              # Stage 5 output
+│   └── 📝 templates/             # LLM prompts
+├── 📚 examples/                  # Usage examples
+├── ⚙️ config/                    # Configuration files
+└── 📖 README.md                  # You are here!
+```
+
+<br/>
+
+## 🎮 Your Role as Director
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Human-Director-purple?style=for-the-badge&logo=user&logoColor=white" alt="Director"/>
+  <img src="https://img.shields.io/badge/AI_Bots-Labor-blue?style=for-the-badge&logo=robot&logoColor=white" alt="AI Bots"/>
+</p>
+
+While AI handles **90% of the manual labor**, you control:
+
+| Your Responsibility | Why It Matters |
+|---------------------|----------------|
+| 🎨 **Creative Vision** | AI generates options, you choose what's unique |
+| ✅ **Quality Control** | Review, refine, and approve bot outputs |
+| 🔧 **Integration** | Connect systems and ensure cohesion |
+| 🎯 **Fun Factor** | Playtest and validate the experience |
+| ✨ **Polish** | Add the human touch that makes games special |
+
+<br/>
+
+## 🔮 Roadmap
+
+- [x] Core pipeline architecture
+- [x] 5-stage bot system
+- [x] CLI interface
+- [x] Configuration management
+- [x] Dry-run mode
+- [ ] Real Steam/itch.io API integration
+- [ ] Live LLM calls for GDD generation
+- [ ] Async asset generation with progress tracking
+- [ ] Unity Editor plugin
+- [ ] Automated playtesting metrics
+- [ ] One-click Steam deployment
+
+<br/>
+
+## 🤝 Contributing
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Contributions-Welcome!-brightgreen?style=for-the-badge" alt="Contributions Welcome"/>
+</p>
+
+We welcome contributions! Key areas:
+
+- 🌐 **API Integrations** - Connect to real data sources
+- 🎨 **Asset Providers** - Add more AI generation APIs
+- 💻 **Code Templates** - Expand Unity script generation
+- 🧪 **Testing** - Improve reliability and coverage
+- 📚 **Documentation** - Help others get started
+
+```bash
+# Fork the repo, then:
+git checkout -b feature/amazing-feature
+git commit -m 'Add amazing feature'
+git push origin feature/amazing-feature
+# Open a Pull Request!
+```
+
+<br/>
+
+## ⚠️ Current Limitations
+
+<table>
+<tr>
+<td>🤖</td>
+<td><strong>No True Autonomy</strong></td>
+<td>Bots execute tasks, not creative decisions</td>
+</tr>
+<tr>
+<td>🔑</td>
+<td><strong>API Dependencies</strong></td>
+<td>External AI services require subscriptions</td>
+</tr>
+<tr>
+<td>🔧</td>
+<td><strong>Integration Required</strong></td>
+<td>Generated code needs human assembly</td>
+</tr>
+<tr>
+<td>🎮</td>
+<td><strong>Fun Not Guaranteed</strong></td>
+<td>AI can't ensure enjoyable gameplay</td>
+</tr>
+</table>
+
+<br/>
+
+## 📜 License
+
+<p align="center">
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT License"/>
+</p>
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+<br/>
+
+## 💬 Philosophy
+
+> *"The goal isn't to replace human creativity—it's to amplify it."*
+
+AutoGS democratizes game development by removing barriers. You're not just a user; you're the **Director** of your own AI-powered game studio. The bots handle the grind. You make the magic.
+
+<br/>
+
+---
+
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=100&section=footer" alt="Footer"/>
+</p>
+
+<p align="center">
+  <strong>Built with ❤️ for indie game developers</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/Snapwave333/AutoGS/issues">Report Bug</a>
+  •
+  <a href="https://github.com/Snapwave333/AutoGS/issues">Request Feature</a>
+  •
+  <a href="https://github.com/Snapwave333/AutoGS">⭐ Star this repo!</a>
+</p>
