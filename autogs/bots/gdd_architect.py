@@ -1,11 +1,23 @@
 """
 Stage 2: GDD Architect Bot
-Game Design Document generation from Game Brief.
+Game Design Document generation from Game Brief with LLM integration.
 """
 
 import json
 from datetime import datetime
 from typing import Any, Optional
+
+try:
+    import openai
+    HAS_OPENAI = True
+except ImportError:
+    HAS_OPENAI = False
+
+try:
+    import anthropic
+    HAS_ANTHROPIC = True
+except ImportError:
+    HAS_ANTHROPIC = False
 
 from ..core.base_bot import BaseBot
 from ..core.config import PipelineConfig
@@ -19,6 +31,14 @@ from ..models.gdd import (
     AssetRequirement,
     TechnicalRequirements,
 )
+from ..templates.gdd_prompts import (
+    CORE_LOOP_PROMPT,
+    MECHANICS_PROMPT,
+    STORY_PROMPT,
+    QUEST_PROMPT,
+    CHARACTER_PROMPT,
+    USP_PROMPT,
+)
 
 
 class GDDArchitectBot(BaseBot):
@@ -31,6 +51,72 @@ class GDDArchitectBot(BaseBot):
     3. Generates complete asset requirements list
     4. Outputs a comprehensive GDD
     """
+
+    def __init__(self, config: Optional[PipelineConfig] = None, dry_run: bool = False):
+        """Initialize GDDArchitectBot with LLM client setup."""
+        super().__init__(config, dry_run)
+        self._openai_client = None
+        self._anthropic_client = None
+        self._llm_available = False
+        self._setup_llm_client()
+
+    def _setup_llm_client(self) -> None:
+        """Set up the LLM client based on configuration."""
+        # Try OpenAI first
+        if HAS_OPENAI and self.config.api.openai_api_key:
+            try:
+                self._openai_client = openai.OpenAI(api_key=self.config.api.openai_api_key)
+                self._llm_available = True
+                self.logger.info("OpenAI LLM client initialized")
+            except Exception as e:
+                self.logger.warning(f"Failed to initialize OpenAI client: {e}")
+
+        # Try Anthropic as fallback
+        if not self._llm_available and HAS_ANTHROPIC and self.config.api.anthropic_api_key:
+            try:
+                self._anthropic_client = anthropic.Anthropic(api_key=self.config.api.anthropic_api_key)
+                self._llm_available = True
+                self.logger.info("Anthropic LLM client initialized")
+            except Exception as e:
+                self.logger.warning(f"Failed to initialize Anthropic client: {e}")
+
+        if not self._llm_available:
+            self.logger.info("No LLM API available, using template-based generation")
+
+    def _call_llm(self, prompt: str, max_tokens: int = 2000) -> Optional[str]:
+        """Call the configured LLM and return the response."""
+        if not self._llm_available:
+            return None
+
+        try:
+            if self._openai_client:
+                response = self._openai_client.chat.completions.create(
+                    model="gpt-4o-mini",
+                    messages=[
+                        {"role": "system", "content": "You are a professional game designer helping create game design documents."},
+                        {"role": "user", "content": prompt}
+                    ],
+                    max_tokens=max_tokens,
+                    temperature=0.7
+                )
+                return response.choices[0].message.content
+
+            elif self._anthropic_client:
+                response = self._anthropic_client.messages.create(
+                    model="claude-3-haiku-20240307",
+                    max_tokens=max_tokens,
+                    messages=[
+                        {"role": "user", "content": prompt}
+                    ],
+                    system="You are a professional game designer helping create game design documents."
+                )
+                return response.content[0].text
+
+        except Exception as e:
+            self.logger.warning(f"LLM call failed: {e}")
+            return None
+
+        return None
 
     def run(self, input_data: Optional[Any] = None) -> GameDesignDocument:
         """
@@ -51,6 +137,7 @@ class GDDArchitectBot(BaseBot):
 
         brief = input_data
         self.logger.info(f"Generating GDD for: {brief.title}")
+        self.logger.info(f"LLM Available: {self._llm_available}")
 
         # Step 1: Generate core gameplay
         self.logger.info("Designing core game loop and mechanics...")
@@ -103,6 +190,9 @@ class GDDArchitectBot(BaseBot):
         # Save GDD as markdown
         self._save_gdd_markdown(gdd)
 
+        # Save GDD as JSON
+        self._save_gdd_json(gdd)
+
         return gdd
 
     def validate_input(self, input_data: Optional[Any]) -> bool:
@@ -121,7 +211,25 @@ class GDDArchitectBot(BaseBot):
         return False
 
     def _generate_core_loop(self, brief: GameBrief) -> str:
-        """Generate the core game loop description."""
+        """Generate the core game loop description using LLM or templates."""
+        if self._llm_available:
+            prompt = CORE_LOOP_PROMPT.format(
+                genre=brief.genre,
+                title=brief.title,
+                concept=brief.one_liner,
+                keywords=", ".join(brief.target_keywords[:5]),
+                theme=brief.core_theme
+            )
+            result = self._call_llm(prompt, max_tokens=500)
+            if result:
+                self.logger.debug("Core loop generated via LLM")
+                return result
+
+        # Fallback to template-based generation
+        return self._template_core_loop(brief)
+
+    def _template_core_loop(self, brief: GameBrief) -> str:
+        """Template-based core loop generation."""
         if "survival" in brief.genre.lower():
             return (
                 "1. EXPLORE: Scout the environment for resources and threats\n"
@@ -138,6 +246,14 @@ class GDDArchitectBot(BaseBot):
                 "4. RISK: Push forward or retreat to secure progress\n"
                 "5. REPEAT: Death leads to meta-progression"
             )
+        elif "deckbuilder" in brief.genre.lower():
+            return (
+                "1. DRAW: Select cards from your deck\n"
+                "2. PLAN: Strategize your turn based on available cards\n"
+                "3. PLAY: Execute card combinations and actions\n"
+                "4. RESOLVE: Process effects and enemy actions\n"
+                "5. EVOLVE: Add new cards and thin your deck"
+            )
         else:
             return (
                 "1. DISCOVER: Explore new areas and uncover secrets\n"
@@ -148,7 +264,93 @@ class GDDArchitectBot(BaseBot):
             )
 
     def _generate_mechanics(self, brief: GameBrief) -> list[GameMechanic]:
-        """Generate game mechanics based on brief."""
+        """Generate game mechanics based on brief using LLM or templates."""
+        mechanics = []
+
+        # Try LLM generation first
+        if self._llm_available:
+            prompt = MECHANICS_PROMPT.format(
+                num_mechanics=self.config.gdd_architect.max_mechanics,
+                title=brief.title,
+                genre=brief.genre,
+                theme=brief.core_theme,
+                features=", ".join(brief.target_keywords[:5])
+            )
+            result = self._call_llm(prompt, max_tokens=3000)
+            if result:
+                parsed_mechanics = self._parse_mechanics_response(result, brief)
+                if parsed_mechanics:
+                    self.logger.debug(f"Generated {len(parsed_mechanics)} mechanics via LLM")
+                    return parsed_mechanics[:self.config.gdd_architect.max_mechanics]
+
+        # Fallback to template-based generation
+        return self._template_mechanics(brief)
+
+    def _parse_mechanics_response(self, response: str, brief: GameBrief) -> list[GameMechanic]:
+        """Parse LLM response into GameMechanic objects."""
+        mechanics = []
+
+        # Simple parsing: look for numbered sections
+        sections = response.split("\n\n")
+
+        current_mechanic = {}
+        for section in sections:
+            lines = section.strip().split("\n")
+            if not lines:
+                continue
+
+            # Try to extract mechanic information
+            name = ""
+            description = ""
+            core_systems = []
+            player_interactions = []
+            dependencies = []
+            priority = "medium"
+
+            for line in lines:
+                line_lower = line.lower()
+                if "name:" in line_lower or (lines.index(line) == 0 and not line.startswith("-")):
+                    name = line.replace("Name:", "").replace("**", "").strip()
+                    # Remove numbering
+                    if name and name[0].isdigit():
+                        name = name.split(".", 1)[-1].strip()
+                        name = name.split(")", 1)[-1].strip()
+                elif "description:" in line_lower:
+                    description = line.split(":", 1)[-1].strip()
+                elif "core system" in line_lower or "system" in line_lower:
+                    systems_text = line.split(":", 1)[-1].strip()
+                    core_systems = [s.strip() for s in systems_text.split(",")]
+                elif "player interaction" in line_lower or "interaction" in line_lower:
+                    interactions_text = line.split(":", 1)[-1].strip()
+                    player_interactions = [i.strip() for i in interactions_text.split(",")]
+                elif "dependenc" in line_lower:
+                    deps_text = line.split(":", 1)[-1].strip()
+                    dependencies = [d.strip() for d in deps_text.split(",")]
+                elif "priority:" in line_lower:
+                    priority = line.split(":", 1)[-1].strip().lower()
+                elif description == "" and len(line) > 20:
+                    description = line.strip()
+
+            if name:
+                # Provide defaults if parsing didn't get everything
+                if not core_systems:
+                    core_systems = ["CoreSystem", "Manager"]
+                if not player_interactions:
+                    player_interactions = ["Interact", "Use"]
+
+                mechanics.append(GameMechanic(
+                    name=name,
+                    description=description if description else f"Mechanic for {name}",
+                    core_systems=core_systems,
+                    player_interactions=player_interactions,
+                    dependencies=dependencies,
+                    priority=priority if priority in ["critical", "high", "medium", "low"] else "medium"
+                ))
+
+        return mechanics
+
+    def _template_mechanics(self, brief: GameBrief) -> list[GameMechanic]:
+        """Template-based mechanics generation."""
         mechanics = []
 
         # Core mechanics based on keywords
@@ -192,6 +394,26 @@ class GDDArchitectBot(BaseBot):
                 priority="high"
             ))
 
+        if "deckbuilder" in brief.genre.lower():
+            mechanics.append(GameMechanic(
+                name="Card System",
+                description="Collect, upgrade, and strategize with cards that represent abilities and actions",
+                core_systems=["DeckManager", "CardDatabase", "CombatResolver"],
+                player_interactions=["Draw", "Play", "Upgrade", "Remove"],
+                dependencies=["TurnSystem"],
+                priority="critical"
+            ))
+
+        if "roguelike" in brief.genre.lower():
+            mechanics.append(GameMechanic(
+                name="Procedural Generation",
+                description="Each run features randomly generated levels and encounters",
+                core_systems=["LevelGenerator", "SeedManager", "EnemySpawner"],
+                player_interactions=["Explore", "Adapt", "Risk"],
+                dependencies=[],
+                priority="critical"
+            ))
+
         # Add standard mechanics
         mechanics.extend([
             GameMechanic(
@@ -220,7 +442,98 @@ class GDDArchitectBot(BaseBot):
         return mechanics[:self.config.gdd_architect.max_mechanics]
 
     def _generate_story(self, brief: GameBrief) -> list[StoryAct]:
-        """Generate a 3-act story structure."""
+        """Generate a 3-act story structure using LLM or templates."""
+        if self._llm_available:
+            prompt = STORY_PROMPT.format(
+                title=brief.title,
+                genre=brief.genre,
+                setting=brief.setting,
+                theme=brief.core_theme
+            )
+            result = self._call_llm(prompt, max_tokens=2000)
+            if result:
+                parsed_acts = self._parse_story_response(result, brief)
+                if parsed_acts:
+                    self.logger.debug("Story acts generated via LLM")
+                    return parsed_acts
+
+        # Fallback to template
+        return self._template_story(brief)
+
+    def _parse_story_response(self, response: str, brief: GameBrief) -> list[StoryAct]:
+        """Parse LLM story response into StoryAct objects."""
+        acts = []
+
+        # Split by "Act" keyword
+        act_sections = []
+        current_section = ""
+
+        for line in response.split("\n"):
+            if line.strip().lower().startswith("act") and ("1" in line or "2" in line or "3" in line):
+                if current_section:
+                    act_sections.append(current_section)
+                current_section = line + "\n"
+            else:
+                current_section += line + "\n"
+
+        if current_section:
+            act_sections.append(current_section)
+
+        for i, section in enumerate(act_sections[:3], 1):
+            lines = section.strip().split("\n")
+            title = f"Act {i}"
+            summary = ""
+            key_events = []
+            locations = []
+            characters = []
+
+            for line in lines:
+                line = line.strip()
+                if not line:
+                    continue
+
+                if line.lower().startswith("act"):
+                    # Extract title
+                    parts = line.split(":", 1)
+                    if len(parts) > 1:
+                        title = parts[1].strip().replace("**", "")
+                    else:
+                        title = line.replace("**", "").strip()
+                elif "summary" in line.lower():
+                    summary = line.split(":", 1)[-1].strip()
+                elif line.startswith("-") or line.startswith("•"):
+                    event = line.lstrip("-•").strip()
+                    if len(key_events) < 5:
+                        key_events.append(event)
+                elif "location" in line.lower():
+                    locs = line.split(":", 1)[-1].strip()
+                    locations = [l.strip() for l in locs.split(",")]
+                elif "character" in line.lower():
+                    chars = line.split(":", 1)[-1].strip()
+                    characters = [c.strip() for c in chars.split(",")]
+                elif len(summary) == 0 and len(line) > 30:
+                    summary = line
+
+            if not key_events:
+                key_events = [f"Event {j}" for j in range(1, 5)]
+            if not locations:
+                locations = ["Location A", "Location B"]
+            if not characters:
+                characters = ["Character A"]
+
+            acts.append(StoryAct(
+                number=i,
+                title=title,
+                summary=summary if summary else f"Act {i} of the story",
+                key_events=key_events,
+                locations=locations,
+                characters=characters
+            ))
+
+        return acts if len(acts) == 3 else []
+
+    def _template_story(self, brief: GameBrief) -> list[StoryAct]:
+        """Template-based story generation."""
         acts = [
             StoryAct(
                 number=1,
@@ -265,7 +578,72 @@ class GDDArchitectBot(BaseBot):
         return acts
 
     def _generate_characters(self, brief: GameBrief) -> list[dict]:
-        """Generate main characters."""
+        """Generate main characters using LLM or templates."""
+        if self._llm_available:
+            prompt = CHARACTER_PROMPT.format(
+                num_characters=3,
+                title=brief.title,
+                genre=brief.genre,
+                synopsis=brief.one_liner,
+                theme=brief.core_theme,
+                setting=brief.setting
+            )
+            result = self._call_llm(prompt, max_tokens=1500)
+            if result:
+                parsed_chars = self._parse_characters_response(result)
+                if parsed_chars:
+                    self.logger.debug("Characters generated via LLM")
+                    return parsed_chars
+
+        # Fallback to template
+        return self._template_characters(brief)
+
+    def _parse_characters_response(self, response: str) -> list[dict]:
+        """Parse LLM character response."""
+        characters = []
+
+        # Split by double newline or numbered items
+        sections = response.split("\n\n")
+
+        for section in sections:
+            if not section.strip():
+                continue
+
+            char = {
+                "name": "Unknown",
+                "role": "NPC",
+                "description": "",
+                "arc": ""
+            }
+
+            lines = section.strip().split("\n")
+            for line in lines:
+                line_lower = line.lower()
+                if "name:" in line_lower:
+                    char["name"] = line.split(":", 1)[-1].strip().replace("**", "")
+                elif "role:" in line_lower:
+                    char["role"] = line.split(":", 1)[-1].strip()
+                elif "description:" in line_lower or "physical:" in line_lower:
+                    char["description"] = line.split(":", 1)[-1].strip()
+                elif "arc:" in line_lower or "character arc:" in line_lower:
+                    char["arc"] = line.split(":", 1)[-1].strip()
+                elif "personality:" in line_lower:
+                    char["personality"] = line.split(":", 1)[-1].strip()
+                elif "backstory:" in line_lower:
+                    char["backstory"] = line.split(":", 1)[-1].strip()
+                elif lines.index(line) == 0 and ":" not in line:
+                    # First line might be the name
+                    potential_name = line.replace("**", "").strip()
+                    if potential_name and len(potential_name) < 50:
+                        char["name"] = potential_name
+
+            if char["name"] != "Unknown":
+                characters.append(char)
+
+        return characters if characters else None
+
+    def _template_characters(self, brief: GameBrief) -> list[dict]:
+        """Template-based character generation."""
         characters = [
             {
                 "name": "The Protagonist",
@@ -289,7 +667,92 @@ class GDDArchitectBot(BaseBot):
         return characters
 
     def _generate_quests(self, brief: GameBrief, acts: list[StoryAct]) -> list[Quest]:
-        """Generate main and side quests."""
+        """Generate main and side quests using LLM or templates."""
+        if self._llm_available:
+            prompt = QUEST_PROMPT.format(
+                num_quests=self.config.gdd_architect.max_quests,
+                genre=brief.genre,
+                title=brief.title,
+                acts=[f"Act {a.number}: {a.title}" for a in acts],
+                mechanics=", ".join(brief.target_keywords[:5])
+            )
+            result = self._call_llm(prompt, max_tokens=3000)
+            if result:
+                parsed_quests = self._parse_quests_response(result, acts)
+                if parsed_quests:
+                    self.logger.debug(f"Generated {len(parsed_quests)} quests via LLM")
+                    return parsed_quests[:self.config.gdd_architect.max_quests]
+
+        # Fallback to template
+        return self._template_quests(brief, acts)
+
+    def _parse_quests_response(self, response: str, acts: list[StoryAct]) -> list[Quest]:
+        """Parse LLM quest response."""
+        quests = []
+        quest_id = 0
+
+        sections = response.split("\n\n")
+
+        for section in sections:
+            if not section.strip():
+                continue
+
+            lines = section.strip().split("\n")
+            title = ""
+            description = ""
+            objectives = []
+            rewards = []
+            act_num = 1
+            is_main = False
+
+            for line in lines:
+                line_lower = line.lower()
+                if "title:" in line_lower or (lines.index(line) == 0 and ":" not in line):
+                    title = line.split(":", 1)[-1].strip().replace("**", "")
+                    if title and title[0].isdigit():
+                        title = title.split(".", 1)[-1].strip()
+                elif "description:" in line_lower:
+                    description = line.split(":", 1)[-1].strip()
+                elif "objective" in line_lower:
+                    obj_text = line.split(":", 1)[-1].strip()
+                    objectives = [o.strip() for o in obj_text.split(",")]
+                elif line.strip().startswith("-"):
+                    objectives.append(line.lstrip("-").strip())
+                elif "reward" in line_lower:
+                    rew_text = line.split(":", 1)[-1].strip()
+                    rewards = [r.strip() for r in rew_text.split(",")]
+                elif "act" in line_lower:
+                    for i in range(1, 4):
+                        if str(i) in line:
+                            act_num = i
+                            break
+                elif "main" in line_lower:
+                    is_main = True
+                elif "side" in line_lower:
+                    is_main = False
+
+            if title:
+                if not objectives:
+                    objectives = ["Complete objective"]
+                if not rewards:
+                    rewards = ["Experience", "Resources"]
+
+                quest_type = "main" if is_main else "side"
+                quests.append(Quest(
+                    id=f"{quest_type}_{quest_id:03d}",
+                    title=title,
+                    description=description if description else f"Quest: {title}",
+                    objectives=objectives[:5],
+                    rewards=rewards,
+                    act=act_num,
+                    is_main_quest=is_main
+                ))
+                quest_id += 1
+
+        return quests if quests else None
+
+    def _template_quests(self, brief: GameBrief, acts: list[StoryAct]) -> list[Quest]:
+        """Template-based quest generation."""
         quests = []
         quest_id = 0
 
@@ -431,7 +894,22 @@ class GDDArchitectBot(BaseBot):
         )
 
     def _generate_usps(self, brief: GameBrief) -> list[str]:
-        """Generate Unique Selling Points."""
+        """Generate Unique Selling Points using LLM or templates."""
+        if self._llm_available:
+            prompt = USP_PROMPT.format(
+                title=brief.title,
+                concept=brief.one_liner,
+                genre=brief.genre,
+                mechanics=", ".join(brief.target_keywords[:5])
+            )
+            result = self._call_llm(prompt, max_tokens=500)
+            if result:
+                usps = [line.strip().lstrip("1234567890.-) ") for line in result.strip().split("\n") if line.strip()]
+                if usps:
+                    self.logger.debug("USPs generated via LLM")
+                    return usps[:5]
+
+        # Fallback to template
         return [
             f"Innovative {brief.genre} mechanics with {', '.join(brief.target_keywords[:2])}",
             f"Immersive {brief.core_theme} atmosphere with procedural elements",
@@ -500,7 +978,66 @@ class GDDArchitectBot(BaseBot):
         md_path = self.output_dir / f"{gdd.title.replace(' ', '_')}_GDD.md"
         with open(md_path, "w") as f:
             f.write(gdd.to_markdown())
-        self.logger.info(f"GDD saved to {md_path}")
+        self.logger.info(f"GDD markdown saved to {md_path}")
+
+    def _save_gdd_json(self, gdd: GameDesignDocument) -> None:
+        """Save GDD as JSON for programmatic access."""
+        json_path = self.output_dir / f"{gdd.title.replace(' ', '_')}_GDD.json"
+
+        gdd_dict = {
+            "title": gdd.title,
+            "version": gdd.version,
+            "last_updated": gdd.last_updated.isoformat(),
+            "high_concept": gdd.high_concept,
+            "unique_selling_points": gdd.unique_selling_points,
+            "target_audience": gdd.target_audience,
+            "core_game_loop": gdd.core_game_loop,
+            "mechanics": [
+                {
+                    "name": m.name,
+                    "description": m.description,
+                    "core_systems": m.core_systems,
+                    "player_interactions": m.player_interactions,
+                    "dependencies": m.dependencies,
+                    "priority": m.priority
+                }
+                for m in gdd.mechanics
+            ],
+            "story_synopsis": gdd.story_synopsis,
+            "story_acts": [
+                {
+                    "number": a.number,
+                    "title": a.title,
+                    "summary": a.summary,
+                    "key_events": a.key_events,
+                    "locations": a.locations,
+                    "characters": a.characters
+                }
+                for a in gdd.story_acts
+            ],
+            "main_characters": gdd.main_characters,
+            "quests": [
+                {
+                    "id": q.id,
+                    "title": q.title,
+                    "description": q.description,
+                    "objectives": q.objectives,
+                    "rewards": q.rewards,
+                    "act": q.act,
+                    "is_main_quest": q.is_main_quest
+                }
+                for q in gdd.quests
+            ],
+            "monetization_strategy": gdd.monetization_strategy,
+            "price_point": gdd.price_point,
+            "estimated_dev_time": gdd.estimated_dev_time,
+            "team_size": gdd.team_size
+        }
+
+        with open(json_path, "w") as f:
+            json.dump(gdd_dict, f, indent=2)
+
+        self.logger.info(f"GDD JSON saved to {json_path}")
 
     def _dry_run(self, input_data: Optional[Any]) -> GameDesignDocument:
         """Simulate GDD generation."""
@@ -526,3 +1063,9 @@ class GDDArchitectBot(BaseBot):
             technical_requirements=TechnicalRequirements(),
             asset_manifest=AssetManifest([], [], [], [], [], [], [])
         )
+
+    def cleanup(self) -> None:
+        """Clean up resources."""
+        self._openai_client = None
+        self._anthropic_client = None
+        super().cleanup()
